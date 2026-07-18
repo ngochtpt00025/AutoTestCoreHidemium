@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';" />
+  <title>Auto Test Core Hidemium</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="detailLog.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">HD</span>
+      <div>
+        <h1>Auto Test Core Hidemium</h1>
+        <p class="sub">Chon file Excel/CSV &rarr; tick profile &rarr; chay check</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-run" class="btn btn-primary">&#9654; Chay</button>
+      <button id="btn-test" class="btn" title="Test luong: mo profile -> doi -> dong">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m1 11h-2V6h2Z"/>
+        </svg>
+        <span>Test luong</span>
+      </button>
+      <button id="btn-detail" class="btn" title="Mo man Detail Log">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path fill="currentColor" d="M3 5h18v2H3V5m0 6h18v2H3v-2m0 6h12v2H3v-2Z"/>
+        </svg>
+        <span>Detail Log</span>
+      </button>
+      <button id="btn-stop" class="btn btn-danger" disabled>&#9632; Dung</button>
+    </div>
+  </header>
+
+  <!-- Thanh chon file -->
+  <section class="filebar">
+    <button id="btn-pick" class="btn btn-icon" title="Chon file Excel / CSV">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path fill="currentColor" d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"/>
+      </svg>
+      <span>Chon file</span>
+    </button>
+    <input id="txt-path" class="path-input" type="text" readonly placeholder="Chua chon file Excel / CSV..." />
+    <button id="btn-reload" class="btn btn-ghost" title="Tai lai file">&#8635;</button>
+    <span id="file-info" class="file-info"></span>
+  </section>
+
+  <main class="layout">
+    <!-- Bang profile -->
+    <section class="panel panel-table">
+      <div class="panel-head">
+        <h2>Profiles</h2>
+        <div class="table-tools">
+          <input id="txt-search" class="search" type="text" placeholder="Tim uuid / profile name..." />
+          <label class="mini"><input type="checkbox" id="chk-all" /> Chon tat ca</label>
+          <span id="sel-count" class="badge">0 / 0</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="col-chk"></th>
+              <th class="col-no">#</th>
+              <th>UUID</th>
+              <th>Profile Name</th>
+              <th class="col-status">Trang thai</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div id="empty" class="empty">Chua co du lieu. Hay chon file Excel / CSV.</div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <aside class="panel panel-settings">
+      <div class="panel-head"><h2>Setting</h2></div>
+      <div class="settings-body">
+        <div class="field">
+          <label for="num-threads">So luong chay</label>
+          <input id="num-threads" type="number" min="1" max="100" value="5" />
+        </div>
+
+        <div class="field">
+          <label for="txt-api">Local API Hidemium</label>
+          <input id="txt-api" type="text" placeholder="http://127.0.0.1:2222" />
+        </div>
+
+        <div class="field">
+          <label class="check-item" style="padding-left:0">
+            <input type="checkbox" id="chk-autoclose" />
+            <span>Tu dong dong profile sau khi check</span>
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="num-testwait">Test luong: giu mo (giay)</label>
+          <input id="num-testwait" type="number" min="1" max="600" value="10" />
+        </div>
+
+        <div class="field">
+          <div class="field-head">
+            <label>Cac muc can check</label>
+            <div class="link-group">
+              <button id="chk-all-on" class="link">Tat ca</button>
+              <button id="chk-all-off" class="link">Bo het</button>
+            </div>
+          </div>
+          <div id="check-list" class="check-list"></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Log + progress -->
+  <footer class="footer">
+    <div class="progress-row">
+      <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+      <span id="progress-text" class="progress-text">San sang</span>
+    </div>
+    <div id="log" class="log"></div>
+  </footer>
+
+  <!-- ============ POPUP DETAIL LOG ============ -->
+  <div id="dl-overlay" class="dl-overlay" hidden>
+    <div class="dl-modal">
+      <header class="dl-top">
+        <div class="dl-title">
+          <strong>Detail Log</strong>
+          <span id="dl-run" class="badge">runId: -</span>
+        </div>
+        <div class="dl-top-right">
+          <span id="dl-progress" class="progress-text">San sang</span>
+          <label class="mini"><input type="checkbox" id="dl-follow" checked /> Bam theo luong dang chay</label>
+          <button id="dl-close" class="btn btn-ghost" title="Dong (Esc)">&#10005;</button>
+        </div>
+      </header>
+
+      <div class="dl-layout">
+        <aside class="dl-side">
+          <div class="dl-side-head">Luong (<span id="dl-lane-count">0</span>)</div>
+          <div id="dl-lanes" class="dl-lanes"></div>
+          <div class="dl-side-head">Profile</div>
+          <div id="dl-profiles" class="dl-profiles"></div>
+        </aside>
+
+        <main class="dl-main">
+          <div class="dl-main-head">
+            <div>
+              <div id="dl-cur-name" class="dl-cur-name">Chua chon profile</div>
+              <div id="dl-cur-uuid" class="dl-cur-uuid"></div>
+            </div>
+            <div id="dl-cur-meta" class="dl-cur-meta"></div>
+          </div>
+
+          <div class="dl-table-wrap">
+            <table class="dl-tbl">
+              <thead id="dl-thead"></thead>
+              <tbody id="dl-tbody"></tbody>
+            </table>
+            <div id="dl-empty" class="empty">Chua co du lieu. Tick profile roi bam Chay.</div>
+          </div>
+
+          <div class="dl-log-head">Log cua profile nay</div>
+          <div id="dl-log" class="log dl-log"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/checkItems.js"></script>
+  <script src="../shared/websites.js"></script>
+  <script src="js/detail/store.js"></script>
+  <script src="js/detail/render.js"></script>
+  <script src="js/detail/detailLog.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/filePicker.js"></script>
+  <script src="js/table.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/runnerUI.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "auto-test-core-hidemium",
+  "version": "1.0.0",
+  "description": "Auto test core Hidemium - chon file excel, chay check fingerprint theo profile",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.2.0"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}

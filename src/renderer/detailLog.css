@@ -1,0 +1,96 @@
+/* Popup Detail Log - overlay ngay trong cua so chinh */
+
+.dl-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(2, 6, 23, .72);
+  display: flex; align-items: center; justify-content: center;
+  padding: 26px;
+}
+.dl-overlay[hidden] { display: none; }
+
+.dl-modal {
+  width: 100%; height: 100%; max-width: 1500px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .6);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+.dl-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 14px; background: var(--bg-2); border-bottom: 1px solid var(--border);
+}
+.dl-title { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.dl-top-right { display: flex; align-items: center; gap: 14px; }
+
+.dl-layout { flex: 1; display: flex; min-height: 0; }
+
+/* ---------- Sidebar ---------- */
+.dl-side {
+  width: 250px; flex: none; border-right: 1px solid var(--border);
+  background: var(--panel-2); display: flex; flex-direction: column; min-height: 0;
+}
+.dl-side-head {
+  padding: 8px 12px; font-size: 10px; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--muted); border-bottom: 1px solid var(--border); background: var(--bg-2);
+}
+.dl-lanes { max-height: 34%; overflow: auto; }
+.dl-profiles { flex: 1; overflow: auto; }
+
+.lane-item, .prof-item {
+  padding: 7px 12px; border-bottom: 1px solid #24324a; cursor: pointer; font-size: 12px;
+}
+.lane-item:hover, .prof-item:hover { background: #223049; }
+.prof-item.active, .lane-item.active { background: #1e3a8a; }
+.lane-id {
+  display: inline-block; min-width: 22px; text-align: center; background: var(--panel);
+  border-radius: 5px; padding: 1px 5px; font-size: 10px; margin-right: 7px; color: #93c5fd;
+}
+.prof-name { display: block; }
+.prof-uuid { display: block; font-family: Consolas, monospace; font-size: 10px; color: #64748b; }
+.prof-item .st { float: right; }
+
+/* ---------- Bang chi tiet ---------- */
+.dl-main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.dl-main-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+}
+.dl-cur-name { font-size: 14px; font-weight: 600; }
+.dl-cur-uuid { font-family: Consolas, monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
+.dl-cur-meta { font-size: 11px; color: var(--muted); text-align: right; line-height: 1.6; }
+
+.dl-table-wrap { flex: 1; overflow: auto; padding: 0; min-height: 0; }
+.dl-tbl { width: 100%; min-width: 1050px; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+.dl-tbl thead th {
+  position: sticky; top: 0; z-index: 2; background: var(--panel-2);
+  text-align: left; padding: 8px 10px; font-weight: 600; color: #cbd5e1;
+  border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+}
+.dl-tbl th.col-a { width: 165px; }
+.dl-tbl th.col-b { width: 300px; }
+.dl-tbl th.col-site { width: 145px; }
+.dl-tbl td {
+  padding: 7px 10px; border-bottom: 1px solid #24324a; border-right: 1px solid #24324a;
+  vertical-align: top; word-break: break-word;
+}
+.dl-tbl tbody tr:hover { background: #1c2942; }
+.cell-a { font-weight: 600; color: #e2e8f0; }
+.cell-a small { display: block; font-weight: 400; color: #64748b; font-size: 10px; }
+
+.kv { display: flex; gap: 6px; line-height: 1.5; }
+.kv-k { color: #64748b; flex: none; max-width: 45%; overflow: hidden; text-overflow: ellipsis; }
+.kv-v { color: #e2e8f0; font-family: Consolas, monospace; font-size: 11px; word-break: break-all; }
+.kv-more { color: #60a5fa; cursor: pointer; font-size: 11px; }
+.cell-missing { color: #64748b; font-style: italic; }
+
+.site-cell { color: var(--muted); font-size: 11px; }
+.site-pending { color: #94a3b8; }
+.site-skipped { color: #64748b; }
+.site-pass { color: #86efac; }
+.site-fail { color: #fca5a5; }
+
+.dl-log-head {
+  padding: 6px 14px; font-size: 10px; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--muted); border-top: 1px solid var(--border); background: var(--bg-2);
+}
+.dl-log { height: 130px; margin: 0; border: none; border-radius: 0; }
