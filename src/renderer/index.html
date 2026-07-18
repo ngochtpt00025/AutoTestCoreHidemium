@@ -84,22 +84,14 @@
           <input id="num-threads" type="number" min="1" max="100" value="5" />
         </div>
 
-        <div class="field">
-          <label for="txt-api">Local API Hidemium</label>
-          <input id="txt-api" type="text" placeholder="http://127.0.0.1:2222" />
-        </div>
-
-        <div class="field">
-          <label class="check-item" style="padding-left:0">
-            <input type="checkbox" id="chk-autoclose" />
-            <span>Tu dong dong profile sau khi check</span>
-          </label>
-        </div>
-
-        <div class="field">
-          <label for="num-testwait">Test luong: giu mo (giay)</label>
-          <input id="num-testwait" type="number" min="1" max="600" value="10" />
-        </div>
+        <!--
+          Local API / tu dong dong profile / thoi gian giu mo khi test luong
+          da an khoi giao dien. Van doc duoc tu config.json:
+          %APPDATA%\auto-test-core-hidemium\config.json
+            "apiBase"     : dia chi Local API      (mac dinh http://127.0.0.1:2222)
+            "autoClose"   : tu dong dong profile   (true/false)
+            "testWaitMs"  : Test luong giu mo (ms) (mac dinh 10000)
+        -->
 
         <div class="field">
           <div class="field-head">

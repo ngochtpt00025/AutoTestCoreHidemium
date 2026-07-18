@@ -3,6 +3,8 @@
  * Moi thay doi deu duoc luu ngay vao config.json.
  */
 window.Settings = (() => {
+  let cfg = {};   // giu config de doc cac muc da an khoi giao dien
+
   function renderChecks(checks) {
     const box = $('#check-list');
     let html = '';
@@ -31,8 +33,9 @@ window.Settings = (() => {
     return Math.max(1, parseInt($('#num-threads').value, 10) || 1);
   }
 
+  /** Da an khoi UI -> lay tu config.json */
   function getTestWaitSec() {
-    return Math.max(1, parseInt($('#num-testwait').value, 10) || 10);
+    return Math.max(1, Math.round((cfg.testWaitMs || 10000) / 1000));
   }
 
   function persistChecks() {
@@ -42,32 +45,14 @@ window.Settings = (() => {
   }
 
   function init(config) {
+    cfg = config || {};
     $('#num-threads').value = config.threads;
-    $('#txt-api').value = config.apiBase || 'http://127.0.0.1:2222';
-    $('#chk-autoclose').checked = !!config.autoClose;
-    $('#num-testwait').value = Math.round((config.testWaitMs || 10000) / 1000);
     renderChecks(config.checks || {});
 
     $('#num-threads').addEventListener('change', () => {
       const v = getThreads();
       $('#num-threads').value = v;
       window.api.config.set({ threads: v });
-    });
-
-    $('#txt-api').addEventListener('change', (e) => {
-      const v = e.target.value.trim().replace(/\/+$/, '') || 'http://127.0.0.1:2222';
-      e.target.value = v;
-      window.api.config.set({ apiBase: v });
-    });
-
-    $('#chk-autoclose').addEventListener('change', (e) => {
-      window.api.config.set({ autoClose: e.target.checked });
-    });
-
-    $('#num-testwait').addEventListener('change', (e) => {
-      const sec = Math.max(1, parseInt(e.target.value, 10) || 10);
-      e.target.value = sec;
-      window.api.config.set({ testWaitMs: sec * 1000 });
     });
 
     $('#check-list').addEventListener('change', persistChecks);
